@@ -1,5 +1,4 @@
 import { Wallet2 } from "lucide-react";
-import { mockData } from "../../features/demo/demoStates";
 import { shortenAddress } from "../../lib/format";
 import { CopyButton } from "../ui/CopyButton";
 
@@ -16,7 +15,7 @@ export function WalletIdentity({
   onConnect: () => void;
   onCopy: (message: string) => void;
 }) {
-  const walletAddress = address || mockData.walletAddress;
+  const walletAddress = address?.trim();
 
   if (loading) {
     return (
@@ -39,13 +38,13 @@ export function WalletIdentity({
           ) : (
             <Wallet2 size={16} className="text-text-muted" aria-hidden="true" />
           )}
-          {connected ? shortenAddress(walletAddress) : "Wallet not connected"}
+          {connected && walletAddress ? shortenAddress(walletAddress) : "Wallet not connected"}
         </div>
         <p className="mt-1 truncate text-xs text-text-muted">
-          {connected ? "Connected with Freighter" : "Connect Freighter"}
+          {connected && walletAddress ? "Connected with Freighter" : "Connect Freighter"}
         </p>
       </div>
-      {connected ? (
+      {connected && walletAddress ? (
         <CopyButton value={walletAddress} label="Wallet address" onCopy={onCopy} />
       ) : (
         <button

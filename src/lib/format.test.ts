@@ -3,7 +3,7 @@ import { shortenAddress } from "./format";
 
 describe("shortenAddress", () => {
   it("abbreviates Stellar addresses", () => {
-    expect(shortenAddress("GDGZXTW36RZPHO3XL2SCCRCYJORJAF2S6TE3IY27X4ZDWVRWLH4XIIFD")).toBe("GDGZ...IIFD");
+    expect(shortenAddress("GABCDEFGHIJKLMNOPQRSTUVWXYZ234567ABCDEFGHIJKLMNOPQRSTUVWXYZ2")).toBe("GABC...XYZ2");
   });
 
   it("keeps short values readable", () => {

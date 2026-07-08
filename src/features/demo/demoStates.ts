@@ -209,7 +209,6 @@ export const demoStates: Record<DemoStateId, DemoState> = {
 export const demoStateOrder = Object.keys(demoStates) as DemoStateId[];
 
 export const mockData = {
-  walletAddress: "GDGZXTW36RZPHO3XL2SCCRCYJORJAF2S6TE3IY27X4ZDWVRWLH4XIIFD",
   contractId: "CCX4V2CJLGQH5RMEQGZ7TC3F2R3THYH2SCQKJ6J6Y7ORBITCHECKIN",
   labUrl: "https://lab.stellar.org/transactions",
   sourceUrl: "https://github.com/adletgamer/orbit-checkin-stellar-starter",

@@ -86,11 +86,11 @@ function buildCardState({
 }): DemoState {
   if (demoOverride) return demoStates[demoOverride];
 
-  if (env.VITE_APP_MODE === "demo" && transaction.status === "idle") {
+  if (env.VITE_APP_MODE === "demo" && connected && transaction.status === "idle") {
     return {
       ...demoStates["wallet-connected"],
       title: "Demo mode ready",
-      description: "This presentation mode uses simulated Testnet results.",
+      description: "Freighter is connected. The check-in result is simulated for the tutorial.",
       networkLabel: "Demo Testnet",
       action: "Demo mode",
       walletConnected: true,
@@ -183,8 +183,8 @@ export default function App() {
   });
 
   const demoMode = env.VITE_APP_MODE === "demo";
-  const connected = demoMode || wallet.isConnected;
-  const walletAddress = demoMode ? mockData.walletAddress : wallet.session?.address;
+  const connected = wallet.isConnected;
+  const walletAddress = wallet.session?.address;
   const cardState = useMemo(
     () =>
       buildCardState({
@@ -199,7 +199,7 @@ export default function App() {
   async function primaryAction() {
     setDemoOverride(null);
 
-    if (!connected && !demoMode) {
+    if (!connected) {
       await wallet.connect();
       return;
     }
@@ -224,8 +224,8 @@ export default function App() {
           <p className="mt-5 max-w-xl text-base leading-7 text-text-secondary sm:text-lg">{copy.description}</p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Button type="button" onClick={demoMode ? primaryAction : wallet.connect} className="sm:min-w-44">
-              {demoMode ? "Run demo check-in" : copy.actions.connect}
+            <Button type="button" onClick={connected ? primaryAction : wallet.connect} className="sm:min-w-44">
+              {connected && demoMode ? "Run demo check-in" : copy.actions.connect}
             </Button>
             <a href={mockData.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex">
               <Button type="button" variant="secondary" icon={<Code2 size={16} />} className="w-full sm:w-auto">
