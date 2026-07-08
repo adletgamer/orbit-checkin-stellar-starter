@@ -1,4 +1,4 @@
-import { env } from "../../lib/env";
+import { apiUrl } from "../../lib/apiUrl";
 
 export type NetworkStatusValue = "online" | "degraded" | "offline" | "checking";
 
@@ -10,7 +10,7 @@ export type NetworkStatus = {
 };
 
 export async function getNetworkStatus(): Promise<NetworkStatus> {
-  const response = await fetch(`${env.VITE_API_URL}/api/network`, {
+  const response = await fetch(apiUrl("/api/network"), {
     headers: { Accept: "application/json" },
   });
 

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { env } from "../../lib/env";
+import { apiUrl } from "../../lib/apiUrl";
 import { parseTransactionError } from "./transaction.errors";
 
 export type CounterState =
@@ -14,7 +14,7 @@ export function useCheckInCounter() {
     setState((current) => ({ status: "loading", total: current.total }));
 
     try {
-      const response = await fetch(`${env.VITE_API_URL}/api/counter`, {
+      const response = await fetch(apiUrl("/api/counter"), {
         headers: { Accept: "application/json" },
       });
 

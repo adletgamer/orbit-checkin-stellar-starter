@@ -24,6 +24,29 @@ pnpm run dev:api
 pnpm run dev
 ```
 
+## Deploy to Vercel
+
+Use these project settings:
+
+- Framework Preset: `Vite`
+- Install Command: `pnpm install`
+- Build Command: `pnpm run build`
+- Output Directory: `dist`
+
+Set these Vercel environment variables:
+
+- `VITE_APP_MODE=testnet`
+- `VITE_STELLAR_NETWORK=testnet`
+- `VITE_STELLAR_RPC_URL=https://soroban-testnet.stellar.org`
+- `VITE_CONTRACT_ID=<your deployed contract id>`
+- `VITE_API_URL=` leave empty for same-origin Vercel functions
+- `VITE_STELLAR_LAB_URL=https://stellar.expert/explorer`
+- `API_STELLAR_NETWORK=testnet`
+- `API_STELLAR_RPC_URL=https://soroban-testnet.stellar.org`
+- `API_CONTRACT_ID=<your deployed contract id>`
+
+The Vercel API routes live in `/api` and are deployed as serverless functions.
+
 The expected contract functions are:
 
 ```text

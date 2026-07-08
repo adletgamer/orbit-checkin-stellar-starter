@@ -8,6 +8,7 @@
     "dev:api": "tsx apps/api/src/server.ts",
     "build": "tsc -b && vite build",
     "build:api": "tsc -p apps/api/tsconfig.json",
+    "typecheck:vercel": "tsc -p tsconfig.vercel.json",
     "typecheck": "tsc -b",
     "lint": "tsc -b --pretty false",
     "test": "vitest run",

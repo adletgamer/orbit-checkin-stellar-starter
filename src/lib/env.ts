@@ -7,13 +7,20 @@ const contractIdSchema = z
     message: "Contract ID must be a Stellar contract address.",
   });
 
+const optionalUrlSchema = z
+  .string()
+  .trim()
+  .refine((value) => value === "" || z.string().url().safeParse(value).success, {
+    message: "Value must be empty or a valid URL.",
+  });
+
 export const clientEnvSchema = z.object({
   VITE_APP_MODE: z.enum(["demo", "testnet"]).default("demo"),
   VITE_STELLAR_NETWORK: z.literal("testnet").default("testnet"),
   VITE_STELLAR_RPC_URL: z.string().url().default("https://soroban-testnet.stellar.org"),
   VITE_CONTRACT_ID: contractIdSchema.default(""),
-  VITE_API_URL: z.string().url().default("http://localhost:3001"),
-  VITE_STELLAR_LAB_URL: z.string().url().default("https://lab.stellar.org"),
+  VITE_API_URL: optionalUrlSchema.default(""),
+  VITE_STELLAR_LAB_URL: z.string().url().default("https://stellar.expert/explorer"),
 });
 
 export type ClientEnv = z.infer<typeof clientEnvSchema>;
