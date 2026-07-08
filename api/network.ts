@@ -1,5 +1,5 @@
 import { rpc } from "@stellar/stellar-sdk";
-import { sendError, sendJson, vercelApiEnv, type JsonResponse } from "./_env";
+import { sendError, sendJson, vercelApiEnv, type JsonResponse } from "./_env.js";
 
 export default async function handler(_req: unknown, res: JsonResponse) {
   try {

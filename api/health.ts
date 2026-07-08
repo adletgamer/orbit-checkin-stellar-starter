@@ -1,4 +1,4 @@
-import { sendJson, type JsonResponse } from "./_env";
+import { sendJson, type JsonResponse } from "./_env.js";
 
 export default function handler(_req: unknown, res: JsonResponse) {
   sendJson(res, 200, {
