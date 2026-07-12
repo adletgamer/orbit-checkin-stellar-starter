@@ -4,7 +4,7 @@ export type TransactionState =
   | { status: "awaiting_signature" }
   | { status: "submitting" }
   | { status: "confirming"; hash?: string }
-  | { status: "success"; hash: string; newTotal: number }
+  | { status: "success"; hash: string; newTotal: number; ledger: number; confirmedAt: string }
   | { status: "rejected" }
   | { status: "error"; code: string; message: string; title: string; technical?: string };
 
@@ -16,4 +16,6 @@ export type PreparedTransaction = {
 export type TransactionResult = {
   hash: string;
   newTotal: number;
+  ledger: number;
+  confirmedAt: string;
 };

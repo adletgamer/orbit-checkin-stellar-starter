@@ -114,7 +114,9 @@ function buildCardState({
     return {
       ...demoStates.success,
       transactionHash: transaction.hash,
-      primaryLabel: "Check-in confirmed",
+      ledger: transaction.ledger,
+      confirmedAt: transaction.confirmedAt,
+      primaryLabel: "View on Stellar Explorer",
       walletConnected: connected,
     };
   }
@@ -210,7 +212,7 @@ export default function App() {
   return (
     <AppShell>
       <AppHeader connected={connected} loading={wallet.isConnecting} address={walletAddress} onConnect={wallet.connect} />
-      <main className="mx-auto grid min-h-[calc(100vh-72px)] max-w-7xl items-center gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[52fr_48fr] lg:gap-16 lg:py-12">
+      <main className="mx-auto grid min-h-[calc(100vh-72px)] max-w-7xl items-center gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:py-12">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -218,7 +220,7 @@ export default function App() {
           className="max-w-2xl"
         >
           <Badge tone={demoMode ? "warning" : "neutral"}>{demoMode ? "Demo mode" : copy.heroBadge}</Badge>
-          <h1 className="mt-5 max-w-2xl font-display text-[42px] font-semibold leading-[0.98] tracking-[-0.035em] text-text-primary sm:text-6xl">
+          <h1 className="mt-5 max-w-xl font-display text-[40px] font-semibold leading-[1.02] tracking-[-0.035em] text-text-primary sm:text-[54px]">
             {copy.tagline}
           </h1>
           <p className="mt-5 max-w-xl text-base leading-7 text-text-secondary sm:text-lg">{copy.description}</p>
@@ -243,6 +245,20 @@ export default function App() {
             ))}
           </div>
 
+          <div id="tutorial" className="mt-8 max-w-xl border-t border-border-subtle pt-6">
+            <p className="text-xs font-semibold tracking-[0.18em] text-cyan">HOW IT WORKS</p>
+            <ol className="mt-4 grid gap-3 sm:grid-cols-3">
+              {["Connect your wallet", "Sign the check-in", "Verify it on-chain"].map((step, index) => (
+                <li key={step} className="flex items-center gap-3 text-sm text-text-secondary sm:items-start">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 font-mono text-xs text-text-primary">
+                    {index + 1}
+                  </span>
+                  <span className="sm:pt-1">{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
           <OrbitalDiagram />
         </motion.section>
 
@@ -254,11 +270,12 @@ export default function App() {
             contractId={env.VITE_CONTRACT_ID || mockData.contractId}
             onConnect={wallet.connect}
             onPrimaryAction={primaryAction}
+            onCreateAnother={checkIn.reset}
             onCopy={pushToast}
           />
         </div>
       </main>
-      <section id="tutorial" className="sr-only" aria-label={copy.descriptor}>
+      <section className="sr-only" aria-label={copy.descriptor}>
         <OrbitMark />
       </section>
       {demoMode ? <DemoControls current={demoOverride || "wallet-connected"} onSelect={setDemoOverride} /> : null}

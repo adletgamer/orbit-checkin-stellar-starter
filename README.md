@@ -1,8 +1,28 @@
 # Orbit Check-In
 
-Orbit Check-In is a beginner Stellar Testnet dApp tutorial. It keeps the approved UI, then adds a simple real path for Freighter, Testnet validation, contract invocation, network status, and a small public API.
+Orbit Check-In is a privacy-conscious beginner dApp for making a first Stellar Testnet transaction. It guides a visitor through connecting Freighter, signing a check-in, and verifying the confirmed result in Stellar Explorer without collecting personal information or handling private keys.
 
 Repository: https://github.com/adletgamer/orbit-checkin-stellar-starter
+
+## User flow
+
+The interface is deliberately split into four tutorial-friendly states:
+
+1. Connect the Freighter wallet.
+2. Review and sign the check-in inside Freighter.
+3. Wait while Stellar Testnet confirms the transaction.
+4. Review the confirmed transaction and open it in Stellar Explorer.
+
+The confirmation view displays only public blockchain information:
+
+- Transaction hash
+- Ledger number
+- Confirmation date and time
+- Stellar network
+- Contract ID
+- Signing public wallet address
+
+Visitors can then choose **View on Stellar Explorer** or **Create another check-in**. The clear state separation makes the app suitable for tutorials, live demos, and screen recordings.
 
 ## Modes
 
@@ -46,6 +66,20 @@ Set these Vercel environment variables:
 - `API_CONTRACT_ID=<your deployed contract id>`
 
 The Vercel API routes live in `/api` and are deployed as serverless functions.
+
+Deploy a preview for the current branch:
+
+```bash
+vercel
+```
+
+Promote a verified build to production:
+
+```bash
+vercel --prod
+```
+
+The included `vercel.json` also applies browser security headers: Content Security Policy, iframe protection, MIME sniffing protection, a limited referrer policy, and disabled camera, microphone, and geolocation permissions.
 
 The expected contract functions are:
 
@@ -95,6 +129,16 @@ Backend config:
 - Errors are sanitized before reaching the main UI.
 - Technical details stay out of the primary interface.
 - Contract ID and network config are validated at startup.
+- The UI never requests names, email addresses, phone numbers, location, or identity documents.
+- No analytics, advertising pixels, or third-party tracking scripts are included.
+- Wallet addresses and transaction details are public Stellar data; the confirmation screen labels this explicitly.
+- Vercel responses restrict framing, browser capabilities, referrer leakage, and unexpected content sources.
+
+> Public wallet addresses are pseudonymous, not private. Do not associate a wallet with personal information in tutorials, screenshots, logs, or support messages.
+
+### Environment variable rule
+
+Every variable prefixed with `VITE_` is embedded in the browser bundle and must be considered public. Never put a seed phrase, private key, API secret, access token, or other credential in a `VITE_` variable. Store server-only secrets in Vercel environment variables without that prefix and access them only from `/api`.
 
 ## Verification
 

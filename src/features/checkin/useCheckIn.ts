@@ -31,7 +31,7 @@ export function useCheckIn({
         setState({ status: "confirming" });
         const result = await demoCheckIn(total);
         setTotal(result.newTotal);
-        setState({ status: "success", hash: result.hash, newTotal: result.newTotal });
+        setState({ status: "success", ...result });
         onMessage?.("Demo check-in confirmed");
         return;
       }
@@ -60,7 +60,7 @@ export function useCheckIn({
         const result = await signAndSubmitCheckIn(session.address, prepared);
         setState({ status: "confirming", hash: result.hash });
         setTotal(result.newTotal);
-        setState({ status: "success", hash: result.hash, newTotal: result.newTotal });
+        setState({ status: "success", ...result });
         onMessage?.("Check-in confirmed");
       } catch (error) {
         const friendly = parseTransactionError(error);

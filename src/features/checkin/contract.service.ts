@@ -96,6 +96,8 @@ export async function signAndSubmitCheckIn(sourceAddress: string, prepared: Prep
   return {
     hash: sent.hash,
     newTotal,
+    ledger: final.ledger,
+    confirmedAt: new Date().toISOString(),
   };
 }
 
@@ -108,5 +110,7 @@ export async function demoCheckIn(currentTotal: number): Promise<TransactionResu
   return {
     hash: "9f4b8c7a6e2d91b035a8c42e6f7d3c1b",
     newTotal: currentTotal + 1,
+    ledger: 128540,
+    confirmedAt: new Date().toISOString(),
   };
 }
