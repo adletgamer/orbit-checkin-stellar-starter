@@ -1,7 +1,7 @@
 export const copy = {
   appName: "Orbit Check-In",
   descriptor: "A beginner dApp built on Stellar Testnet",
-  tagline: "Sign your first Stellar action.",
+  tagline: "Make your first Stellar check-in",
   description: "Connect Freighter, send a check-in, and verify it on-chain.",
   heroBadge: "Open-source Stellar starter",
   indicators: ["Testnet only", "No real funds", "Open source"],

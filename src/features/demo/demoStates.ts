@@ -31,6 +31,8 @@ export type DemoState = {
   primaryDisabled?: boolean;
   showSkeleton?: boolean;
   transactionHash?: string;
+  ledger?: number;
+  confirmedAt?: string;
   steps: Record<StepKey, StepState>;
 };
 
@@ -163,6 +165,8 @@ export const demoStates: Record<DemoStateId, DemoState> = {
     networkOk: true,
     primaryLabel: "Check-in confirmed",
     transactionHash: "9f4b8c7a6e2d91b035a8c42e6f7d3c1b",
+    ledger: 128540,
+    confirmedAt: "2026-07-12T15:30:00.000Z",
     steps: { prepare: "complete", sign: "complete", confirm: "complete" },
   },
   "rpc-error": {

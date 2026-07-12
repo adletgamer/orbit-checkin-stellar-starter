@@ -24,6 +24,7 @@ export function CheckInCard({
   total,
   onConnect,
   onPrimaryAction,
+  onCreateAnother,
   onCopy,
   walletAddress,
   contractId = env.VITE_CONTRACT_ID || mockData.contractId,
@@ -34,6 +35,7 @@ export function CheckInCard({
   contractId?: string;
   onConnect: () => void;
   onPrimaryAction: () => void;
+  onCreateAnother: () => void;
   onCopy: (message: string) => void;
 }) {
   const confirmed = state.id === "success";
@@ -114,18 +116,25 @@ export function CheckInCard({
           </motion.div>
         </AnimatePresence>
 
-        <TransactionStepper steps={state.steps} />
+        {!confirmed ? <TransactionStepper steps={state.steps} /> : null}
 
-        <Button
-          type="button"
-          onClick={onPrimaryAction}
-          disabled={state.primaryDisabled}
-          className="w-full"
-        >
-          {state.primaryLabel}
-        </Button>
+        {!confirmed ? (
+          <Button type="button" onClick={onPrimaryAction} disabled={state.primaryDisabled} className="w-full">
+            {state.primaryLabel}
+          </Button>
+        ) : null}
 
-        <TransactionResult hash={state.transactionHash} onCopy={onCopy} />
+        {confirmed && state.transactionHash ? (
+          <TransactionResult
+            hash={state.transactionHash}
+            ledger={state.ledger}
+            confirmedAt={state.confirmedAt}
+            contractId={contractId}
+            walletAddress={walletAddress}
+            onCopy={onCopy}
+            onCreateAnother={onCreateAnother}
+          />
+        ) : null}
         <EducationDisclosure visible={confirmed} />
       </div>
 
