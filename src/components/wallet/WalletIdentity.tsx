@@ -38,10 +38,14 @@ export function WalletIdentity({
           ) : (
             <Wallet2 size={16} className="text-text-muted" aria-hidden="true" />
           )}
-          {connected && walletAddress ? shortenAddress(walletAddress) : "Wallet not connected"}
+          {connected ? (walletAddress ? shortenAddress(walletAddress) : "Demo wallet") : "Wallet not connected"}
         </div>
         <p className="mt-1 truncate text-xs text-text-muted">
-          {connected && walletAddress ? "Connected with Freighter" : "Connect Freighter"}
+          {connected
+            ? walletAddress
+              ? "Connected with Freighter"
+              : "Private simulated session"
+            : "Connect Freighter"}
         </p>
       </div>
       {connected && walletAddress ? (

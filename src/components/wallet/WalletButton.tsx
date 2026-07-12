@@ -13,7 +13,7 @@ export function WalletButton({
   address?: string;
   onConnect: () => void;
 }) {
-  const shortAddress = address ? shortenAddress(address) : "Connected";
+  const shortAddress = address ? shortenAddress(address) : "Demo ready";
 
   return (
     <Button
