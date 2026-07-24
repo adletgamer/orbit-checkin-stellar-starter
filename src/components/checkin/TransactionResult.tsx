@@ -20,12 +20,11 @@ function Detail({ label, value, copyValue, onCopy }: { label: string; value: str
   );
 }
 
-export function TransactionResult({ hash, ledger, confirmedAt, contractId, walletAddress, onCopy, onCreateAnother }: {
+export function TransactionResult({ hash, ledger, confirmedAt, contractId, onCopy, onCreateAnother }: {
   hash: string;
   ledger?: number;
   confirmedAt?: string;
   contractId: string;
-  walletAddress?: string;
   onCopy: (message: string) => void;
   onCreateAnother: () => void;
 }) {
@@ -42,7 +41,7 @@ export function TransactionResult({ hash, ledger, confirmedAt, contractId, walle
         <Detail label="Date & time" value={date} onCopy={onCopy} />
         <Detail label="Network" value="Stellar Testnet" onCopy={onCopy} />
         <Detail label="Contract" value={shortValue(contractId)} copyValue={contractId} onCopy={onCopy} />
-        <Detail label="Signing wallet" value={walletAddress ? shortValue(walletAddress) : "Demo wallet"} copyValue={walletAddress} onCopy={onCopy} />
+        <Detail label="Privacy" value="Wallet address hidden" onCopy={onCopy} />
       </div>
 
       <div className="mt-4 grid gap-2">
@@ -53,7 +52,7 @@ export function TransactionResult({ hash, ledger, confirmedAt, contractId, walle
           Create another check-in
         </Button>
       </div>
-      <p className="mt-3 text-center text-xs text-text-muted">Only public blockchain data is shown.</p>
+      <p className="mt-3 text-center text-xs leading-5 text-text-muted">Transaction data is public on Testnet. Your wallet address stays hidden here to reduce accidental sharing.</p>
     </div>
   );
 }

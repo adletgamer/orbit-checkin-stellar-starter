@@ -14,10 +14,14 @@ export function CopyButton({
   const [copied, setCopied] = useState(false);
 
   async function copyValue() {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
-    onCopy(`${label} copied`);
-    window.setTimeout(() => setCopied(false), 1500);
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      onCopy(`${label} copied`);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      onCopy(`Could not copy ${label.toLowerCase()}`);
+    }
   }
 
   return (
@@ -25,7 +29,7 @@ export function CopyButton({
       <button
         type="button"
         onClick={copyValue}
-        aria-label={label}
+        aria-label={`Copy ${label.toLowerCase()}`}
         className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-elevated text-text-secondary transition hover:text-text-primary"
       >
         {copied ? <Check size={15} /> : <Copy size={15} />}

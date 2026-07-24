@@ -173,9 +173,22 @@ export default function App() {
     await checkIn.run(demoMode ? null : wallet.session);
   }
 
+  function disconnectWallet() {
+    if (demoMode) setDemoConnected(false);
+    else wallet.disconnectLocal();
+    checkIn.reset();
+    pushToast("Wallet disconnected locally");
+  }
+
   return (
     <AppShell>
-      <AppHeader connected={connected} loading={wallet.isConnecting} address={walletAddress} onConnect={primaryAction} />
+      <AppHeader
+        connected={connected}
+        loading={wallet.isConnecting}
+        address={walletAddress}
+        onConnect={primaryAction}
+        onDisconnect={disconnectWallet}
+      />
       <main className="mx-auto grid min-h-[calc(100vh-72px)] max-w-7xl items-center gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:py-12">
         <motion.section
           initial={{ opacity: 0, y: 12 }}

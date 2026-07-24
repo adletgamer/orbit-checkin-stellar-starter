@@ -1,4 +1,5 @@
-import { BookOpen, Github, Menu } from "lucide-react";
+import { BookOpen, Github, Menu, X } from "lucide-react";
+import { useState } from "react";
 import { copy } from "../../content/copy";
 import { mockData } from "../../features/demo/demoStates";
 import { Badge } from "../ui/Badge";
@@ -18,12 +19,16 @@ export function AppHeader({
   loading,
   address,
   onConnect,
+  onDisconnect,
 }: {
   connected: boolean;
   loading?: boolean;
   address?: string;
   onConnect: () => void;
+  onDisconnect: () => void;
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-40 border-b border-border-subtle/70 bg-background/82 backdrop-blur-xl">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
@@ -58,14 +63,26 @@ export function AppHeader({
           </a>
           <button
             type="button"
-            aria-label="Tutorial menu"
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((value) => !value)}
             className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-text-secondary transition hover:bg-surface-soft hover:text-text-primary md:hidden"
           >
-            <Menu size={18} />
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
-          <WalletButton connected={connected} loading={loading} address={address} onConnect={onConnect} />
+          <WalletButton connected={connected} loading={loading} address={address} onConnect={onConnect} onDisconnect={onDisconnect} />
         </nav>
       </div>
+      {menuOpen ? (
+        <nav className="border-t border-border-subtle bg-surface px-5 py-3 md:hidden" aria-label="Mobile navigation">
+          <a href="#tutorial" onClick={() => setMenuOpen(false)} className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-text-secondary hover:bg-surface-soft hover:text-text-primary">
+            <BookOpen size={16} /> {copy.nav.tutorial}
+          </a>
+          <a href={mockData.sourceUrl} target="_blank" rel="noopener noreferrer" className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-text-secondary hover:bg-surface-soft hover:text-text-primary">
+            <Github size={16} /> {copy.nav.github}
+          </a>
+        </nav>
+      ) : null}
     </header>
   );
 }

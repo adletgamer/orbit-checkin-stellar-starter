@@ -23,9 +23,9 @@ const config: Config = {
         info: "var(--info)",
       },
       fontFamily: {
-        display: ["Space Grotesk", "Inter", "system-ui", "sans-serif"],
+        display: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
+        mono: ["ui-monospace", "SFMono-Regular", "Cascadia Code", "Consolas", "monospace"],
       },
       boxShadow: {
         card: "0 24px 80px rgba(0, 0, 0, 0.32)",

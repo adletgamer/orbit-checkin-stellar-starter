@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, CheckCircle2, ShieldCheck } from "lucide-react";
+import { AlertCircle, CheckCircle2, LockKeyhole, ShieldCheck } from "lucide-react";
 import { copy } from "../../content/copy";
 import { env } from "../../lib/env";
 import { mockData, type DemoState } from "../../features/demo/demoStates";
@@ -70,6 +70,14 @@ export function CheckInCard({
 
       <CheckInCounter total={total} confirmed={confirmed} />
 
+      <div className="mb-4 flex items-start gap-3 rounded-xl border border-cyan/20 bg-cyan/[0.06] px-3.5 py-3">
+        <LockKeyhole size={16} className="mt-0.5 shrink-0 text-cyan" aria-hidden="true" />
+        <p className="text-xs leading-5 text-text-secondary">
+          <span className="font-semibold text-text-primary">Privacy by default.</span>{" "}
+          Your address is hidden in this interface. Stellar transactions remain public and traceable on-chain.
+        </p>
+      </div>
+
       <div className="space-y-4 border-y border-border-subtle py-5">
         <WalletIdentity
           connected={state.walletConnected}
@@ -130,7 +138,6 @@ export function CheckInCard({
             ledger={state.ledger}
             confirmedAt={state.confirmedAt}
             contractId={contractId}
-            walletAddress={walletAddress}
             onCopy={onCopy}
             onCreateAnother={onCreateAnother}
           />
