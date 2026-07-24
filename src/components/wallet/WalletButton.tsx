@@ -1,5 +1,4 @@
-import { Wallet } from "lucide-react";
-import { shortenAddress } from "../../lib/format";
+import { LogOut, Wallet } from "lucide-react";
 import { Button } from "../ui/Button";
 
 export function WalletButton({
@@ -7,24 +6,24 @@ export function WalletButton({
   loading,
   address,
   onConnect,
+  onDisconnect,
 }: {
   connected: boolean;
   loading?: boolean;
   address?: string;
   onConnect: () => void;
+  onDisconnect: () => void;
 }) {
-  const shortAddress = address ? shortenAddress(address) : "Connected";
-
   return (
     <Button
       type="button"
       variant={connected ? "subtle" : "secondary"}
-      icon={<Wallet size={16} />}
-      onClick={onConnect}
+      icon={connected ? <LogOut size={16} /> : <Wallet size={16} />}
+      onClick={connected ? onDisconnect : onConnect}
       disabled={loading}
       className="min-w-[132px]"
     >
-      {loading ? "Connecting" : connected ? shortAddress : "Connect"}
+      {loading ? "Connecting" : connected ? "Disconnect" : "Connect wallet"}
     </Button>
   );
 }

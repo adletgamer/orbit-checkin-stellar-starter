@@ -34,6 +34,8 @@ pnpm run dev:api
 pnpm run dev
 ```
 
+Demo mode does not require a wallet extension and never contacts Freighter. It uses a clearly labeled simulated session so any visitor can complete the tutorial without setup. Internal state-switching controls are intentionally excluded from the public interface.
+
 Testnet mode uses Freighter and a real Soroban contract:
 
 ```bash

@@ -8,13 +8,12 @@ import { Badge } from "./components/ui/Badge";
 import { Button } from "./components/ui/Button";
 import { Toast } from "./components/ui/Toast";
 import { copy } from "./content/copy";
-import { demoStateOrder, demoStates, mockData, type DemoState, type DemoStateId } from "./features/demo/demoStates";
+import { demoStates, mockData, type DemoState } from "./features/demo/demoStates";
 import { useCheckIn } from "./features/checkin/useCheckIn";
 import { useCheckInCounter } from "./features/checkin/useCheckInCounter";
 import { transactionPrimaryLabel, transactionSteps } from "./features/checkin/transactionMachine";
 import { useWallet } from "./features/wallet/useWallet";
 import { env } from "./lib/env";
-import { cn } from "./utils/classNames";
 
 function OrbitalDiagram() {
   return (
@@ -40,52 +39,15 @@ function OrbitalDiagram() {
   );
 }
 
-function DemoControls({
-  current,
-  onSelect,
-}: {
-  current: string;
-  onSelect: (state: DemoStateId) => void;
-}) {
-  return (
-    <details className="mx-auto mt-10 max-w-7xl px-5 pb-8 sm:px-8">
-      <summary className="cursor-pointer text-sm font-semibold text-text-muted transition hover:text-text-secondary">
-        Demo state controls
-      </summary>
-      <div className="mt-4 grid gap-2 rounded-2xl border border-border-subtle bg-surface/60 p-3 sm:grid-cols-2 lg:grid-cols-4">
-        {demoStateOrder.map((stateId) => (
-          <button
-            key={stateId}
-            type="button"
-            onClick={() => onSelect(stateId)}
-            className={cn(
-              "rounded-xl border px-3 py-2 text-left text-sm transition",
-              current === stateId
-                ? "border-primary bg-primary/12 text-text-primary"
-                : "border-border-subtle bg-surface-elevated/50 text-text-secondary hover:border-border-strong",
-            )}
-          >
-            {demoStates[stateId].label}
-          </button>
-        ))}
-      </div>
-    </details>
-  );
-}
-
 function buildCardState({
   wallet,
   transaction,
-  demoOverride,
   connected,
 }: {
   wallet: ReturnType<typeof useWallet>;
   transaction: ReturnType<typeof useCheckIn>["state"];
-  demoOverride: DemoStateId | null;
   connected: boolean;
 }): DemoState {
-  if (demoOverride) return demoStates[demoOverride];
-
   if (env.VITE_APP_MODE === "demo" && connected && transaction.status === "idle") {
     return {
       ...demoStates["wallet-connected"],
@@ -169,7 +131,7 @@ function buildCardState({
 
 export default function App() {
   const [toast, setToast] = useState<string | null>(null);
-  const [demoOverride, setDemoOverride] = useState<DemoStateId | null>(null);
+  const [demoConnected, setDemoConnected] = useState(false);
 
   function pushToast(message: string) {
     setToast(message);
@@ -185,23 +147,25 @@ export default function App() {
   });
 
   const demoMode = env.VITE_APP_MODE === "demo";
-  const connected = wallet.isConnected;
+  const connected = demoMode ? demoConnected : wallet.isConnected;
   const walletAddress = wallet.session?.address;
   const cardState = useMemo(
     () =>
       buildCardState({
         wallet,
         transaction: checkIn.state,
-        demoOverride,
         connected,
       }),
-    [checkIn.state, connected, demoOverride, wallet],
+    [checkIn.state, connected, wallet],
   );
 
   async function primaryAction() {
-    setDemoOverride(null);
-
     if (!connected) {
+      if (demoMode) {
+        setDemoConnected(true);
+        pushToast("Demo ready — no wallet required");
+        return;
+      }
       await wallet.connect();
       return;
     }
@@ -209,9 +173,22 @@ export default function App() {
     await checkIn.run(demoMode ? null : wallet.session);
   }
 
+  function disconnectWallet() {
+    if (demoMode) setDemoConnected(false);
+    else wallet.disconnectLocal();
+    checkIn.reset();
+    pushToast("Wallet disconnected locally");
+  }
+
   return (
     <AppShell>
-      <AppHeader connected={connected} loading={wallet.isConnecting} address={walletAddress} onConnect={wallet.connect} />
+      <AppHeader
+        connected={connected}
+        loading={wallet.isConnecting}
+        address={walletAddress}
+        onConnect={primaryAction}
+        onDisconnect={disconnectWallet}
+      />
       <main className="mx-auto grid min-h-[calc(100vh-72px)] max-w-7xl items-center gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:py-12">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
@@ -226,8 +203,8 @@ export default function App() {
           <p className="mt-5 max-w-xl text-base leading-7 text-text-secondary sm:text-lg">{copy.description}</p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Button type="button" onClick={connected ? primaryAction : wallet.connect} className="sm:min-w-44">
-              {connected && demoMode ? "Run demo check-in" : copy.actions.connect}
+            <Button type="button" onClick={primaryAction} className="sm:min-w-44">
+              {demoMode ? (connected ? "Run demo check-in" : "Start interactive demo") : copy.actions.connect}
             </Button>
             <a href={mockData.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex">
               <Button type="button" variant="secondary" icon={<Code2 size={16} />} className="w-full sm:w-auto">
@@ -268,7 +245,7 @@ export default function App() {
             total={counter.total}
             walletAddress={walletAddress}
             contractId={env.VITE_CONTRACT_ID || mockData.contractId}
-            onConnect={wallet.connect}
+            onConnect={primaryAction}
             onPrimaryAction={primaryAction}
             onCreateAnother={checkIn.reset}
             onCopy={pushToast}
@@ -278,7 +255,6 @@ export default function App() {
       <section className="sr-only" aria-label={copy.descriptor}>
         <OrbitMark />
       </section>
-      {demoMode ? <DemoControls current={demoOverride || "wallet-connected"} onSelect={setDemoOverride} /> : null}
       <Toast message={toast} />
     </AppShell>
   );

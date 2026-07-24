@@ -28,7 +28,8 @@ export function sendJson(res: JsonResponse, statusCode: number, value: unknown) 
 }
 
 export function sendError(res: JsonResponse, statusCode = 500) {
-  sendJson(res, statusCode, {
+  res.setHeader("Cache-Control", "no-store");
+  res.status(statusCode).json({
     error: {
       code: "api_error",
       message: "The API could not complete the request.",

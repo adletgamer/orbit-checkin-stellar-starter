@@ -1,6 +1,6 @@
-import { Wallet2 } from "lucide-react";
+import { Eye, EyeOff, Wallet2 } from "lucide-react";
+import { useState } from "react";
 import { shortenAddress } from "../../lib/format";
-import { CopyButton } from "../ui/CopyButton";
 
 export function WalletIdentity({
   connected,
@@ -16,6 +16,7 @@ export function WalletIdentity({
   onCopy: (message: string) => void;
 }) {
   const walletAddress = address?.trim();
+  const [revealed, setRevealed] = useState(false);
 
   if (loading) {
     return (
@@ -38,14 +39,34 @@ export function WalletIdentity({
           ) : (
             <Wallet2 size={16} className="text-text-muted" aria-hidden="true" />
           )}
-          {connected && walletAddress ? shortenAddress(walletAddress) : "Wallet not connected"}
+          {connected
+            ? walletAddress
+              ? revealed
+                ? shortenAddress(walletAddress, 8, 6)
+                : "Wallet connected"
+              : "Demo wallet"
+            : "Wallet not connected"}
         </div>
         <p className="mt-1 truncate text-xs text-text-muted">
-          {connected && walletAddress ? "Connected with Freighter" : "Connect Freighter"}
+          {connected
+            ? walletAddress
+              ? revealed
+                ? "Public address visible"
+                : "Address hidden for privacy"
+              : "Private simulated session"
+            : "Connect Freighter"}
         </p>
       </div>
       {connected && walletAddress ? (
-        <CopyButton value={walletAddress} label="Wallet address" onCopy={onCopy} />
+        <button
+          type="button"
+          onClick={() => setRevealed((value) => !value)}
+          aria-pressed={revealed}
+          className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-border-subtle px-3 text-xs font-semibold text-text-secondary transition hover:border-border-strong hover:text-text-primary"
+        >
+          {revealed ? <EyeOff size={14} /> : <Eye size={14} />}
+          {revealed ? "Hide" : "Reveal"}
+        </button>
       ) : (
         <button
           type="button"
